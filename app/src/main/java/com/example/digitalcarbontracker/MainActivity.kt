@@ -1,15 +1,10 @@
-package com.example.digitalcarbontracker
+package com.example.click2co2meter3
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import com.example.digitalcarbontracker.databinding.ActivityMainBinding
-import com.example.digitalcarbontracker.worker.EmissionWorker
-import java.util.concurrent.TimeUnit
+import com.example.click2co2meter3.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,21 +16,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navController = findNavController(R.id.nav_host_fragment)
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
+        val navController = navHostFragment.navController
+
         binding.bottomNav.setupWithNavController(navController)
-
-        startWorker()
-    }
-
-    private fun startWorker() {
-        val workRequest = PeriodicWorkRequestBuilder<EmissionWorker>(15, TimeUnit.MINUTES)
-            .build()
-
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            "EmissionWorker",
-            ExistingPeriodicWorkPolicy.UPDATE,
-            workRequest
-        )
     }
 }
-
